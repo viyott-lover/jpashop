@@ -11,11 +11,13 @@ import java.util.List;
 import static javax.persistence.FetchType.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Category {
 
-    @Id @GeneratedValue
-    @Column(name ="category_id")
+    @Id
+    @GeneratedValue
+    @Column(name = "category_id")
     private Long id;
 
     private String name;
