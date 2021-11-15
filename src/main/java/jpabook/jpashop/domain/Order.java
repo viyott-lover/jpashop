@@ -80,7 +80,6 @@ public class Order {
     }
 
     //== 조회 로직 ==//
-
     /**
      * 전체 주문 가격 조회
      */
@@ -90,7 +89,7 @@ public class Order {
                 .sum();
     }
 
-    public int getTotalPrice2() {
+    public int getTotalPrice2() { // reduce
         return orderItems.stream()
                 .map(OrderItem::getTotalPrice)
                 .reduce(0, Integer::sum);
