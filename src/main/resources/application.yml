@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
 #        show_sql: true
@@ -16,4 +16,4 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
-    org.hibernate.type: trace # 이걸 적어주면 쿼리 파라미터가 뭔지 알려줌
+#    org.hibernate.type: trace # 이걸 적어주면 쿼리 파라미터가 뭔지 알려줌
