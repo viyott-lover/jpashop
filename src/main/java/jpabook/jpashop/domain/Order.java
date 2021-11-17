@@ -86,6 +86,7 @@ public class Order {
     /**
      * 전체 주문 가격 조회
      */
+
     public int getTotalPrice() { // mapToInt
         return orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
@@ -96,5 +97,13 @@ public class Order {
         return orderItems.stream()
                 .map(OrderItem::getTotalPrice)
                 .reduce(0, Integer::sum);
+    }
+
+    public int getTotalPrice3() {
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
     }
 }
