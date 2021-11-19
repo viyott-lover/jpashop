@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +26,32 @@ public class OrderQueryRepository {
         return result;
     }
 
+    public List<OrderQueryDto> findAllByDto_optimization() {
+        List<OrderQueryDto> result = findOrders();
+
+        List<Long> orderIds = result.stream().map(OrderQueryDto::getOrderId).collect(Collectors.toList()); // orderIds : 4, 11
+
+        List<OrderItemQueryDto> orderItems = findOrderItemMap(orderIds);
+
+        Map<Long, List<OrderItemQueryDto>> orderItemMap = orderItems.stream().collect(Collectors.groupingBy(OrderItemQueryDto::getOrderId));
+
+        result.forEach(o -> o.setOrderItems(orderItemMap.get(o.getOrderId())));
+
+        return result;
+
+    }
+
+    private List<OrderItemQueryDto> findOrderItemMap(List<Long> orderIds) {
+        List<OrderItemQueryDto> orderItems = em.createQuery(
+                "select new jpabook.jpashop.repository.order.query.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
+                        " from OrderItem oi" +
+                        " join oi.item i" +
+                        " where oi.order.id in :orderIds", OrderItemQueryDto.class)
+                .setParameter("orderIds", orderIds)
+                .getResultList();
+        return orderItems;
+    }
+
     private List<OrderItemQueryDto> findOrderItems(Long orderId) {
         return em.createQuery("select new jpabook.jpashop.repository.order.query.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
                         " from OrderItem oi" +
@@ -39,6 +68,7 @@ public class OrderQueryRepository {
                         " join o.delivery d", OrderQueryDto.class)
                 .getResultList();
     }
+
 
 
 }
